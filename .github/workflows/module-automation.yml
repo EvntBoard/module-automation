@@ -1,0 +1,71 @@
+name: Module Automation
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+    - "v*"
+
+jobs:
+  module-automation:
+    strategy:
+      matrix:
+        os: [ windows-latest ] # [ubuntu-latest, windows-latest, macos-latest ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install libxtst-dev
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install libxtst-dev
+
+      - name: Install
+        run: |
+          cd module-automation
+          yarn cache clean
+          yarn install --network-timeout 1000000
+
+      - name: Build
+        run: |
+          cd module-automation
+          yarn build
+
+      - name: Package
+        run: |
+          cd module-automation
+          yarn package
+
+      - name: Compress
+        run: |
+          cd module-automation
+          npx bestzip module-automation-src.zip ./package.json ./node_modules/* ./dist/*
+          cd ./package
+          npx bestzip ../module-automation.zip ./*
+
+      - name: Upload
+        uses: bayssmekanique/action-simple-file-upload@v1
+        with:
+          user: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          host: ${{ secrets.FTP_HOST }}
+          port: ${{ secrets.FTP_PORT }}
+          src: ./module-automation/module-automation.zip
+          dest: ./builds/${{ github.sha }}/${{ matrix.os }}/module-automation.zip
+
+      - name: Upload Deps
+        uses: bayssmekanique/action-simple-file-upload@v1
+        with:
+          user: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          host: ${{ secrets.FTP_HOST }}
+          port: ${{ secrets.FTP_PORT }}
+          src: ./module-automation/module-automation-src.zip
+          dest: ./builds/${{ github.sha }}/${{ matrix.os }}/module-automation-src.zip
