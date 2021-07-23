@@ -108,7 +108,7 @@ end-of-stream@^1.1.0, end-of-stream@^1.4.1:
 
 "evntboard-communicate@https://github.com/EvntBoard/communicate.git":
   version "1.0.0"
-  resolved "https://github.com/EvntBoard/communicate.git#bafb82844447f891afcfa6ad752f8648f3029609"
+  resolved "https://github.com/EvntBoard/communicate.git#f3d2996c0ca63dcf22f5971224ad47aa83661294"
 
 expand-template@^2.0.3:
   version "2.0.3"
