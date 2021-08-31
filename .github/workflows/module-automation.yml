@@ -7,37 +7,37 @@ on:
     - "v*"
 
 jobs:
-module-automation:
-  strategy:
-    matrix:
-      os: [ ubuntu-latest, windows-latest, macos-latest ]
+  module-automation:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
 
-  runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
-  steps:
-    - name: Check out Git repository
-      uses: actions/checkout@v2
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
 
-    - name: Install Node.js, NPM and Yarn
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
 
-    - name: Setup Linux Dependencies
-      if: startsWith(matrix.os, 'ubuntu')
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libxtst-dev libpng++-dev
+      - name: Setup Linux Dependencies
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxtst-dev libpng++-dev
 
-    - name: Build
-      run: |
-        yarn
-        yarn build
+      - name: Build
+        run: |
+          yarn
+          yarn build
 
-    - name: Pack
-      run: mv ./dist ./module-automation
+      - name: Pack
+        run: mv ./dist ./module-automation
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: module-automation-${{ matrix.os }}
-        path: ./module-automation
+      - uses: actions/upload-artifact@v2
+        with:
+          name: module-automation-${{ matrix.os }}
+          path: ./module-automation
