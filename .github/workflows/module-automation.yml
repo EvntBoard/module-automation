@@ -35,7 +35,7 @@ jobs:
           yarn build
 
       - name: Pack
-        run: npx bestzip module-automation-${{ github.workspace }}.zip dist
+        run: npx bestzip module-automation-${{ matrix.os }}.zip dist
 
       - name: Release
         uses: softprops/action-gh-release@v1
