@@ -34,8 +34,23 @@ jobs:
           yarn
           yarn build
 
-      - name: Pack
-        run: npx bestzip module-automation-${{ matrix.os }}.zip dist
+      - name: Pack Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cd dist
+          npx bestzip ../module-automation-linux.zip .
+
+      - name: Pack Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd dist
+          npx bestzip ../module-automation-windows.zip .
+
+      - name: Pack Macos
+        if: matrix.os == 'macos-latest'
+        run: |
+          cd dist
+          npx bestzip ../module-automation-macos.zip .
 
       - name: Release
         uses: softprops/action-gh-release@v1
