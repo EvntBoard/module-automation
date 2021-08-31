@@ -35,19 +35,19 @@ jobs:
           yarn build
 
       - name: Pack Linux
-        if: matrix.os == 'ubuntu-latest'
+        if: startsWith(matrix.os, 'ubuntu')
         run: |
           cd dist
           npx bestzip ../module-automation-linux.zip .
 
       - name: Pack Windows
-        if: matrix.os == 'windows-latest'
+        if: startsWith(matrix.os, 'windows')
         run: |
           cd dist
           npx bestzip ../module-automation-windows.zip .
 
       - name: Pack Macos
-        if: matrix.os == 'macos-latest'
+        if: startsWith(matrix.os, 'macos')
         run: |
           cd dist
           npx bestzip ../module-automation-macos.zip .
