@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-    - "v*"
+    - "v*.*.*"
 
 jobs:
   module-automation:
@@ -35,9 +35,12 @@ jobs:
           yarn build
 
       - name: Pack
-        run: mv ./dist ./module-automation
+        run: npx bestzip ./module-automation-${{ github.workspace }}.zip ./dist
 
-      - uses: actions/upload-artifact@v2
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: module-automation-${{ matrix.os }}
-          path: ./module-automation
+          draft: true
+          files: |
+            dist/**/*
