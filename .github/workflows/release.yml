@@ -3,13 +3,13 @@ name: Module Automation
 on:
   push:
     tags:
-    - "v*.*.*"
+      - "v*.*.*"
 
 jobs:
   module-automation:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -22,34 +22,65 @@ jobs:
         with:
           node-version: 12
 
-      - name: Setup Linux Dependencies
+      - name: Linux Deps
         if: startsWith(matrix.os, 'ubuntu')
         run: |
           sudo apt-get update
           sudo apt-get install -y libxtst-dev libpng++-dev
 
-      - name: Build
-        run: |
-          yarn
-          yarn build
-
-      - name: Pack Linux
+      - name: Build Linux
         if: startsWith(matrix.os, 'ubuntu')
         run: |
-          cd dist
-          npx bestzip ../module-automation-linux.zip .
+          yarn
+          yarn prebuild:x64
+          yarn build:x64:linux
+          mkdir -p build/linux-x64/automation/build/Release/
+          cp node_modules/robotjs/build/Release/robotjs.node ./build/linux-x64/automation/build/Release/robotjs.node
+          cd build/linux-x64
+          npx bestzip ../../automation-linux-x64.zip .
 
-      - name: Pack Windows
+      - name: Build Windows
         if: startsWith(matrix.os, 'windows')
         run: |
-          cd dist
-          npx bestzip ../module-automation-windows.zip .
+          yarn
+          yarn prebuild:x64
+          yarn build:x64:win
+          mkdir -p build/win-x64/automation/build/Release/
+          cp node_modules/robotjs/build/Release/robotjs.node ./build/win-x64/automation/build/Release/robotjs.node
+          cd build/win-x64
+          npx bestzip ../../automation-win-x64.zip .
 
-      - name: Pack Macos
+      - name: Build Macos
         if: startsWith(matrix.os, 'macos')
         run: |
-          cd dist
-          npx bestzip ../module-automation-macos.zip .
+          yarn
+          yarn prebuild:x64
+          yarn build:x64:macos
+          mkdir -p build/macos-x64/automation/build/Release/
+          cp node_modules/robotjs/build/Release/robotjs.node ./build/macos-x64/automation/build/Release/robotjs.node
+          cd build/macos-x64
+          npx bestzip ../../automation-macos-x64.zip .
+
+      - name: Artefact Macos x64
+        uses: actions/upload-artifact@v2
+        if: startsWith(matrix.os, 'macos')
+        with:
+          name: Midi MacOS x64
+          path: ./build/macos-x64
+
+      - name: Artefact Linux x64
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: actions/upload-artifact@v2
+        with:
+          name: Midi Linux x64
+          path: ./build/linux-x64
+
+      - name: Artefact Win x64
+        if: startsWith(matrix.os, 'windows')
+        uses: actions/upload-artifact@v2
+        with:
+          name: Midi Windows x64
+          path: ./build/win-x64
 
       - name: Release
         uses: softprops/action-gh-release@v1

@@ -1,47 +1,83 @@
-import { getEvntComServerFromChildProcess } from "evntboard-communicate";
+require("dotenv").config();
+import { EvntComNode } from "evntcom-js/dist/node";
 import robot from "robotjs";
 
-const evntComServer = getEvntComServerFromChildProcess();
+const NAME: string = process.env.EVNTBOARD_NAME || "automation";
+const HOST: string = process.env.EVNTBOARD_HOST || "localhost";
+const PORT: number = process.env.EVNTBOARD_PORT
+  ? parseInt(process.env.EVNTBOARD_PORT)
+  : 5001;
 
-evntComServer.expose("newEvent", () => {});
-evntComServer.expose("load", () => {});
-evntComServer.expose("unload", () => {});
-evntComServer.expose("reload", () => {});
+const evntCom = new EvntComNode({
+  name: NAME,
+  port: PORT,
+  host: HOST,
+});
 
 // keyboard
 
-evntComServer.expose("setKeyboardDelay", (ms: number) => robot.setKeyboardDelay(ms));
+evntCom.expose("setKeyboardDelay", async (ms: number) =>
+  robot.setKeyboardDelay(ms)
+);
 
-evntComServer.expose("keyTap", (key: string, modifier?: string | string[]) => robot.keyTap(key, modifier));
+evntCom.expose("keyTap", async (key: string, modifier?: string | string[]) =>
+  robot.keyTap(key, modifier)
+);
 
-evntComServer.expose("keyToggle", (key: string, down:string, modifier?: string[]) => robot.keyToggle(key, down, modifier));
+evntCom.expose(
+  "keyToggle",
+  async (key: string, down: string, modifier?: string[]) =>
+    robot.keyToggle(key, down, modifier)
+);
 
-evntComServer.expose("typeString", (message: string) => robot.typeString(message));
+evntCom.expose("typeString", async (message: string) =>
+  robot.typeString(message)
+);
 
-evntComServer.expose("typeStringDelayed", (message:string, cpm:number) => robot.typeStringDelayed(message, cpm));
+evntCom.expose("typeStringDelayed", async (message: string, cpm: number) =>
+  robot.typeStringDelayed(message, cpm)
+);
 
 // mouse
 
-evntComServer.expose("setMouseDelay", (ms:number) => robot.setMouseDelay(ms));
+evntCom.expose("setMouseDelay", async (ms: number) => robot.setMouseDelay(ms));
 
-evntComServer.expose("moveMouse", (x: number,y: number) => robot.moveMouse(x, y));
+evntCom.expose("moveMouse", async (x: number, y: number) =>
+  robot.moveMouse(x, y)
+);
 
-evntComServer.expose("moveMouseSmooth", (x: number,y: number) => robot.moveMouseSmooth(x, y));
+evntCom.expose("moveMouseSmooth", async (x: number, y: number) =>
+  robot.moveMouseSmooth(x, y)
+);
 
-evntComServer.expose("mouseClick", (side: string, double: boolean) => robot.mouseClick(side, double));
+evntCom.expose("mouseClick", async (side: string, double: boolean) =>
+  robot.mouseClick(side, double)
+);
 
-evntComServer.expose("mouseToggle", (down: string, button: string) =>  robot.mouseToggle(down, button));
+evntCom.expose("mouseToggle", async (down: string, button: string) =>
+  robot.mouseToggle(down, button)
+);
 
-evntComServer.expose("dragMouse", (x: number,y: number) => robot.dragMouse(x, y));
+evntCom.expose("dragMouse", async (x: number, y: number) =>
+  robot.dragMouse(x, y)
+);
 
-evntComServer.expose("getMousePos", () => robot.getMousePos());
+evntCom.expose("getMousePos", async () => robot.getMousePos());
 
-evntComServer.expose("scrollMouse", (x: number,y: number) => robot.scrollMouse(x, y));
+evntCom.expose("scrollMouse", async (x: number, y: number) =>
+  robot.scrollMouse(x, y)
+);
 
 // screen
 
-evntComServer.expose("getPixelColor", (x: number,y: number) => robot.getPixelColor(x, y));
+evntCom.expose("getPixelColor", async (x: number, y: number) =>
+  robot.getPixelColor(x, y)
+);
 
-evntComServer.expose("getScreenSize", () =>  robot.getScreenSize());
+evntCom.expose("getScreenSize", async () => robot.getScreenSize());
 
-evntComServer.expose("screenCapture", (x: number, y: number, width: number, height: number) => robot.screen.capture(x, y, width, height));
+evntCom.expose(
+  "screenCapture",
+  async (x: number, y: number, width: number, height: number) =>
+    robot.screen.capture(x, y, width, height)
+);

@@ -1,2 +1,9 @@
-# module-automation
-Automation (RobotJS) for EvntBoard
+# Automation for EvntBoard
+
+## Config
+
+```json5
+{
+    "name": "automation", // if no name is provided default value is "automation"
+}
+```

@@ -2,11 +2,30 @@
   "name": "module-automation",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "dist/index.js",
+  "bin": "dist/index.js",
   "scripts": {
-    "watch": "ncc build src/index.ts -w -o dist",
-    "build": "ncc build src/index.ts -m -o dist",
+    "start": "nodemon --watch \"src/**/*.ts\" --exec \"ts-node\" src/index.ts",
+    "prestart:prod": "tsc -p .",
+    "start:prod": "node dist/index.js",
+    "prebuild:x64": "tsc -p .",
+    "prebuild:arm64": "tsc -p .",
+    "build:x64": "npm-run-all build:x64:*",
+    "build:arm64": "npm-run-all build:x64:*",
+    "build:x64:linux": "cross-env PKG_CACHE_PATH=./pkg-cache pkg . --output ./build/linux-x64/automation/automation --targets node16-linux-x64",
+    "build:x64:macos": "cross-env PKG_CACHE_PATH=./pkg-cache pkg . --output ./build/macos-x64/automation/automation --targets node16-macos-x64",
+    "build:x64:win": "cross-env PKG_CACHE_PATH=./pkg-cache pkg . --output ./build/win-x64/automation/automation --targets node16-win-x64",
+    "build:arm64:linux": "cross-env PKG_CACHE_PATH=./pkg-cache pkg . --output ./build/linux-arm64/automation/automation --targets node16-linux-arm64",
+    "build:arm64:macos": "cross-env PKG_CACHE_PATH=./pkg-cache pkg . --output ./build/macos-arm64/automation/automation --targets node16-macos-arm64",
+    "build:arm64:win": "cross-env PKG_CACHE_PATH=./pkg-cache pkg . --output ./build/win-arm64/automation/automation --targets node16-win-arm64",
+    "lint": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "pkg": {
+    "scripts": [
+      "dist/**/*.js",
+      "node_modules/evntcom-js/dist/**/*.js"
+    ]
   },
   "repository": {
     "type": "git",
@@ -19,12 +38,20 @@
   },
   "homepage": "https://github.com/EvntBoard/module-automation#readme",
   "dependencies": {
-    "evntboard-communicate": "https://github.com/EvntBoard/communicate.git",
+    "dotenv": "^10.0.0",
+    "evntcom-js": "https://github.com/EvntBoard/evntcom-js.git",
     "robotjs": "^0.6.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.25",
-    "@vercel/ncc": "^0.28.6",
-    "typescript": "^4.1.3"
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.12",
+    "npm-run-all": "^4.1.5",
+    "pkg": "^5.3.2",
+    "prettier": "^2.4.0",
+    "ts-loader": "^9.2.5",
+    "ts-node": "^10.2.1",
+    "tslint-plugin-prettier": "^2.3.0",
+    "typescript": "^4.4.3"
   }
 }
