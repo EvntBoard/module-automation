@@ -66,21 +66,21 @@ jobs:
         uses: actions/upload-artifact@v2
         if: startsWith(matrix.os, 'macos')
         with:
-          name: Midi MacOS x64
+          name: Automation MacOS x64
           path: ./build/macos-x64
 
       - name: Artefact Linux x64
         if: startsWith(matrix.os, 'ubuntu')
         uses: actions/upload-artifact@v2
         with:
-          name: Midi Linux x64
+          name: Automation Linux x64
           path: ./build/linux-x64
 
       - name: Artefact Win x64
         if: startsWith(matrix.os, 'windows')
         uses: actions/upload-artifact@v2
         with:
-          name: Midi Windows x64
+          name: Automation Windows x64
           path: ./build/win-x64
 
       - name: Release
