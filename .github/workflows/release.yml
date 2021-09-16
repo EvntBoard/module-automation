@@ -1,4 +1,4 @@
-name: Module Automation
+name: Module Shortcut
 
 on:
   workflow_dispatch:
@@ -7,10 +7,10 @@ on:
       - "v*.*.*"
 
 jobs:
-  module-automation:
+  release:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
 
     runs-on: ${{ matrix.os }}
 
@@ -29,71 +29,49 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libxtst-dev libpng++-dev
 
-      - name: Build Linux
-        if: startsWith(matrix.os, 'ubuntu')
+      - name: Build
         run: |
           yarn
-          yarn prebuild:x64
-          yarn build:x64:linux
-          mkdir -p build/linux-x64/automation/build/Release/
-          cp node_modules/robotjs/build/Release/robotjs.node ./build/linux-x64/automation/build/Release/robotjs.node
-
-      - name: Build Windows
-        if: startsWith(matrix.os, 'windows')
-        run: |
-          yarn
-          yarn prebuild:x64
-          yarn build:x64:win
-          mkdir -p build/win-x64/automation/build/Release/
-          cp node_modules/robotjs/build/Release/robotjs.node ./build/win-x64/automation/build/Release/robotjs.node
-
-      - name: Build Macos
-        if: startsWith(matrix.os, 'macos')
-        run: |
-          yarn
-          yarn prebuild:x64
-          yarn build:x64:macos
-          mkdir -p build/macos-x64/automation/build/Release/
-          cp node_modules/robotjs/build/Release/robotjs.node ./build/macos-x64/automation/build/Release/robotjs.node
+          yarn build
 
       - name: Artefact Macos x64
         uses: actions/upload-artifact@v2
         if: startsWith(matrix.os, 'macos')
         with:
-          name: Automation MacOS x64
-          path: ./build/macos-x64
+          name: Module Automation MacOS x64
+          path: ./dist/
 
       - name: Artefact Linux x64
         if: startsWith(matrix.os, 'ubuntu')
         uses: actions/upload-artifact@v2
         with:
-          name: Automation Linux x64
-          path: ./build/linux-x64
+          name: Module Automation Linux x64
+          path: ./dist/
 
       - name: Artefact Win x64
         if: startsWith(matrix.os, 'windows')
         uses: actions/upload-artifact@v2
         with:
-          name: Automation Windows x64
-          path: ./build/win-x64
+          name: Module Automation Windows x64
+          path: ./dist/
 
       - name: Pack Linux x64
         if: startsWith(github.ref, 'refs/tags/') && startsWith(matrix.os, 'ubuntu')
         run: |
-          cd build/linux-x64
-          npx bestzip ../../shortcut-linux-x64.zip .
+          cd ./dist/
+          npx bestzip ../automation-linux-x64.zip .
 
       - name: Pack Win x64
         if: startsWith(github.ref, 'refs/tags/') && startsWith(matrix.os, 'windows')
         run: |
-          cd build/win-x64
-          npx bestzip ../../shortcut-win-x64.zip .
+          cd ./dist/
+          npx bestzip ../automation-win-x64.zip .
 
       - name: Pack Macos x64
         if: startsWith(github.ref, 'refs/tags/') && startsWith(matrix.os, 'macos')
         run: |
-          cd build/macos-x64
-          npx bestzip ../../shortcut-macos-x64.zip .
+          cd ./dist/
+          npx bestzip ../automation-macos-x64.zip .
 
       - name: Release
         uses: softprops/action-gh-release@v1
