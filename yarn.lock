@@ -52,9 +52,9 @@
   integrity sha512-eZxlbI8GZscaGS7kkc/trHTT5xgrjH3/1n2JDwusC9iahPKWMRvRjJSAN5mCXviuTGQ/lHnhvv8Q1YTpnfz9gA==
 
 "@types/node@^14.14.25":
-  version "14.17.16"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.16.tgz#2b9252bd4fdf0393696190cd9550901dd967c777"
-  integrity sha512-WiFf2izl01P1CpeY8WqFAeKWwByMueBEkND38EcN8N68qb0aDG3oIS1P5MhAX5kUdr469qRyqsY/MjanLjsFbQ==
+  version "14.17.17"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.17.tgz#4ec7b71bbcb01a4e55455b60b18b1b6a783fe31d"
+  integrity sha512-niAjcewgEYvSPCZm3OaM9y6YQrL2SEPH9PymtE6fuZAvFiP6ereCcvApGl2jKTq7copTIguX3PBvfP08LN4LvQ==
 
 "@vercel/ncc@^0.31.1":
   version "0.31.1"
@@ -411,7 +411,7 @@ eslint-plugin-prettier@^2.2.0:
 
 "evntcom-js@https://github.com/EvntBoard/evntcom-js.git":
   version "1.0.0"
-  resolved "https://github.com/EvntBoard/evntcom-js.git#b3eb9c95e9c3ca8ed99f7f66a9282ce216cd48f4"
+  resolved "https://github.com/EvntBoard/evntcom-js.git#fb83b2720e317087fa3288c47308139182dfe28a"
   dependencies:
     "@msgpack/msgpack" "^2.7.1"
     uuid "^8.3.2"
