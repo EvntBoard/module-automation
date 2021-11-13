@@ -13,13 +13,13 @@ export class AutomationConnexion {
       host: evntBoardHost,
     });
 
-    this.evntCom.onOpen = async () => {
+    this.evntCom.on('open', async () => {
       await this.evntCom.notify("newEvent", [
         "automation-load",
         null,
         { emitter: this.name },
       ]);
-    };
+    });
 
     this.evntCom.expose("setKeyboardDelay", async (ms: number) =>
       robot.setKeyboardDelay(ms)
@@ -92,5 +92,7 @@ export class AutomationConnexion {
       async (x: number, y: number, width: number, height: number) =>
         robot.screen.capture(x, y, width, height)
     );
+
+    this.evntCom.connect();
   }
 }
