@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: 14
 
+      - id: get_version
+        uses: battila7/get-version-action@v2
+
       - name: Linux Deps
         if: startsWith(matrix.os, 'ubuntu')
         run: |
@@ -34,29 +37,12 @@ jobs:
           yarn
           yarn build
 
-      - id: get_version
-        uses: battila7/get-version-action@v2
-
-      - name: Artefact Macos x64
-        uses: actions/upload-artifact@v2
-        if: startsWith(matrix.os, 'macos')
-        with:
-          name: Module Automation MacOS x64
-          path: ./dist/
-
-      - name: Artefact Linux x64
-        if: startsWith(matrix.os, 'ubuntu')
-        uses: actions/upload-artifact@v2
-        with:
-          name: Module Automation Linux x64
-          path: ./dist/
-
-      - name: Artefact Win x64
-        if: startsWith(matrix.os, 'windows')
-        uses: actions/upload-artifact@v2
-        with:
-          name: Module Automation Windows x64
-          path: ./dist/
+      - name: Copy metadata.json & config.json & generate REPO + VERSION
+        run: |
+          cp ./metadata.json ./dist/metadata.json
+          cp ./defaultConfig.json ./dist/config.json
+          echo ${{ github.repository }} > ./dist/REPO.TXT
+          echo ${{ steps.get_version.outputs.version }} > ./dist/VERSION.TXT
 
       - name: Pack Linux x64
         if: startsWith(github.ref, 'refs/tags/') && startsWith(matrix.os, 'ubuntu')
