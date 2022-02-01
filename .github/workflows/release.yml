@@ -1,4 +1,4 @@
-name: Module Shortcut
+name: Module Automation
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ jobs:
   release:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
 
     runs-on: ${{ matrix.os }}
 
@@ -27,40 +27,61 @@ jobs:
         uses: battila7/get-version-action@v2
 
       - name: Linux Deps
-        if: startsWith(matrix.os, 'ubuntu')
+        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y libxtst-dev libpng++-dev
 
-      - name: Build
+      - name: Prepare dist
+        shell: bash
+        run: mkdir ./dist
+
+      - name: Copy metadata.json
+        shell: bash
         run: |
+          cp ./metadata.json ./dist/metadata.json
+
+      - name: Copy config.json
+        shell: bash
+        run: |
+          cp ./config.json ./dist/config.json
+
+      - name: Populate metadata.json
+        shell: bash
+        run: |
+          npx rexreplace '__MODULE_REPO__' '${{ github.repository }}' ./dist/metadata.json
+          npx rexreplace '__MODULE_VERSION__' '${{ steps.get_version.outputs.version }}' ./dist/metadata.json
+
+      - name: Build module
+        shell: bash
+        run: |
+          cd module
           yarn
           yarn build
 
-      - name: Copy metadata.json & config.json & generate REPO + VERSION
+      - name: Copy module
+        shell: bash
         run: |
-          cp ./metadata.json ./dist/metadata.json
-          cp ./defaultConfig.json ./dist/config.json
-          echo ${{ github.repository }} > ./dist/REPO.TXT
-          echo ${{ steps.get_version.outputs.version }} > ./dist/VERSION.TXT
+          mkdir ./dist/module
+          cp -a ./module/build/. ./dist/module
 
       - name: Pack Linux x64
         if: startsWith(github.ref, 'refs/tags/') && startsWith(matrix.os, 'ubuntu')
         run: |
           cd ./dist/
-          npx bestzip ../module-automation-linux-x64-${{ steps.get_version.outputs.version }}.zip .
+          npx bestzip ../${{ github.event.repository.name }}-linux-x64-${{ steps.get_version.outputs.version }}.zip .
 
       - name: Pack Win x64
         if: startsWith(github.ref, 'refs/tags/') && startsWith(matrix.os, 'windows')
         run: |
           cd ./dist/
-          npx bestzip ../module-automation-win-x64-${{ steps.get_version.outputs.version }}.zip .
+          npx bestzip ../${{ github.event.repository.name }}-win-x64-${{ steps.get_version.outputs.version }}.zip .
 
       - name: Pack Macos x64
         if: startsWith(github.ref, 'refs/tags/') && startsWith(matrix.os, 'macos')
         run: |
           cd ./dist/
-          npx bestzip ../module-automation-macos-x64-${{ steps.get_version.outputs.version }}.zip .
+          npx bestzip ../${{ github.event.repository.name }}-macos-x64-${{ steps.get_version.outputs.version }}.zip .
 
       - name: Release
         uses: softprops/action-gh-release@v1

@@ -14,6 +14,13 @@
   dependencies:
     "@cspotcode/source-map-consumer" "0.8.0"
 
+"@evntboard/evntcom-node@https://github.com/EvntBoard/evntcom-node.git":
+  version "0.0.1"
+  resolved "https://github.com/EvntBoard/evntcom-node.git#a0f1aff3873f5523332257d82548c34d1f451908"
+  dependencies:
+    uuid "^8.3.2"
+    ws "^8.4.2"
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
@@ -381,12 +388,6 @@ eslint-plugin-prettier@^2.2.0:
   dependencies:
     fast-diff "^1.1.1"
     jest-docblock "^21.0.0"
-
-"evntcom-js@https://github.com/EvntBoard/evntcom-js.git":
-  version "1.0.0"
-  resolved "https://github.com/EvntBoard/evntcom-js.git#190729dd5feb5e4b152e7170eaf8afcc8e1a6349"
-  dependencies:
-    uuid "^8.3.2"
 
 expand-template@^2.0.3:
   version "2.0.3"
@@ -1252,6 +1253,11 @@ write-file-atomic@^3.0.0:
     is-typedarray "^1.0.0"
     signal-exit "^3.0.2"
     typedarray-to-buffer "^3.1.5"
+
+ws@^8.4.2:
+  version "8.4.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.4.2.tgz#18e749868d8439f2268368829042894b6907aa0b"
+  integrity sha512-Kbk4Nxyq7/ZWqr/tarI9yIt/+iNNFOjBXEWgTb4ydaNHBNGgvf2QHbS9fdfsndfjFlFwEd4Al+mw83YkaD10ZA==
 
 xdg-basedir@^4.0.0:
   version "4.0.0"

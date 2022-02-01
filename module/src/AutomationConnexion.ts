@@ -1,13 +1,13 @@
-import { EvntComNode } from "evntcom-js/dist/node";
+import { EvntCom } from "@evntboard/evntcom-node";
 import robot from "robotjs";
 
 export class AutomationConnexion {
   private name: string;
-  private evntCom: EvntComNode;
+  private evntCom: EvntCom;
 
   constructor(evntBoardHost: string, evntBoardPort: number, name: string) {
     this.name = name;
-    this.evntCom = new EvntComNode({
+    this.evntCom = new EvntCom({
       name,
       port: evntBoardPort,
       host: evntBoardHost,
